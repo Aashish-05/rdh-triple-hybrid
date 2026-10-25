@@ -1,0 +1,6 @@
+Config,Avg_MAE,Avg_Time_ms
+RP-only,5.062,5.88
+CNN-only,4.4563,69.42
+TFP-only,4.4804,446.24
+RP+CNN,4.4542,75.3
+RP+CNN+TFP,4.4501,521.54

@@ -1,0 +1,39 @@
+{
+  "T1": 1.0,
+  "T2": "inf",
+  "val_mae": 2.555704,
+  "objective": "minimize_mean_val_mae_over_500_bossbase_images",
+  "dataset_version": "v2",
+  "selection_split": "val",
+  "validation_count": 500,
+  "splits_path": "D:\\rdh-triple-hybrid\\data\\processed\\v2\\splits.json",
+  "manifest_path": "D:\\rdh-triple-hybrid\\data\\processed\\v2\\dataset_manifest.json",
+  "splits_file_sha256": "e53d7db88917caf492698f91af8dd2d4761aa1fa2b279361d602ee58c7e2a6cd",
+  "manifest_file_sha256": "4793f836ed67e5f05a07563079381b3d45a823435de309761d0911b507256630",
+  "validation_filenames_sha256": "ed880de72c085855bbbb8f28065781c7f7c9737d00ad53cd2da354639464cfb3",
+  "checkpoints": {
+    "cnn_path": "checkpoints\\clean_v2\\best_cnnp.pt",
+    "cnn_sha256": "3558eaf97ea50a9ef6cf499da2985424684c83181d059b4e9a95f8c28305dcff",
+    "transformer_path": "checkpoints\\clean_v2\\best_tfp.pt",
+    "transformer_sha256": "978e2d1e1247f12157ad4c32665ceda861567fef35fbf918e1d3bfcc8949363b"
+  },
+  "T1_candidates": [
+    1.0,
+    2.0,
+    3.0,
+    4.0,
+    5.0,
+    6.0,
+    8.0
+  ],
+  "T2_candidates": [
+    8.0,
+    10.0,
+    12.0,
+    15.0,
+    20.0,
+    25.0,
+    "inf"
+  ],
+  "tuning_note": "Thresholds selected on 500 BOSSbase validation images only. Test images (USC-SIPI) were NOT used during tuning."
+}

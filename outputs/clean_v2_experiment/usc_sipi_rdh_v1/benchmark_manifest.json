@@ -1,0 +1,401 @@
+{
+  "schema_version": 1,
+  "project": "Reversible Data Hiding: Triple-Hybrid Predictor Framework",
+  "dataset_version": "v2",
+  "benchmark": "existing 19-image USC-SIPI test split from D:\\rdh-triple-hybrid\\data\\processed\\v2\\splits.json",
+  "created_utc": "2026-10-24T19:59:57Z",
+  "device": "cuda",
+  "predictors": {
+    "RP-only": {
+      "kind": "rhombus_predictor",
+      "rounding": "floor((neighbor_sum + neighbor_count // 2) / neighbor_count)",
+      "border": "excluded"
+    },
+    "CNN-only": {
+      "kind": "cnn_only",
+      "device": "cuda",
+      "border": "excluded",
+      "class": "CNNPixelPredictor",
+      "in_channels": 3,
+      "hidden_channels": 48,
+      "weights_sha256": "63ec9fb556cd33e30fcf92c1080b65d018b974aaf5b760915b705a507afc423b",
+      "checkpoint_sha256": "3558eaf97ea50a9ef6cf499da2985424684c83181d059b4e9a95f8c28305dcff",
+      "torch_version": "2.6.0+cu124",
+      "numpy_version": "2.5.2"
+    },
+    "Transformer-only": {
+      "kind": "transformer_only",
+      "device": "cuda",
+      "border": "excluded",
+      "class": "WindowTransformerPredictor",
+      "in_channels": 3,
+      "dim": 48,
+      "window_size": 8,
+      "num_blocks": 3,
+      "num_heads": 4,
+      "mlp_ratio": 2.0,
+      "weights_sha256": "3a97631a555cfc55b0ed32bfe5fbd95ed65a673cf1cf35ef83319a911c3997ef",
+      "checkpoint_sha256": "978e2d1e1247f12157ad4c32665ceda861567fef35fbf918e1d3bfcc8949363b",
+      "torch_version": "2.6.0+cu124",
+      "numpy_version": "2.5.2"
+    },
+    "Triple-hybrid": {
+      "kind": "triple_hybrid",
+      "T1": 1.0,
+      "T2": 1000000000.0,
+      "device": "cuda",
+      "border": "excluded",
+      "cnn": {
+        "class": "CNNPixelPredictor",
+        "in_channels": 3,
+        "hidden_channels": 48,
+        "weights_sha256": "63ec9fb556cd33e30fcf92c1080b65d018b974aaf5b760915b705a507afc423b",
+        "checkpoint_sha256": "3558eaf97ea50a9ef6cf499da2985424684c83181d059b4e9a95f8c28305dcff"
+      },
+      "transformer": {
+        "class": "WindowTransformerPredictor",
+        "in_channels": 3,
+        "dim": 48,
+        "window_size": 8,
+        "num_blocks": 3,
+        "num_heads": 4,
+        "mlp_ratio": 2.0,
+        "weights_sha256": "3a97631a555cfc55b0ed32bfe5fbd95ed65a673cf1cf35ef83319a911c3997ef",
+        "checkpoint_sha256": "978e2d1e1247f12157ad4c32665ceda861567fef35fbf918e1d3bfcc8949363b"
+      },
+      "torch_version": "2.6.0+cu124",
+      "numpy_version": "2.5.2"
+    }
+  },
+  "thresholds": {
+    "T1": 1.0,
+    "T2": "inf",
+    "T2_runtime_sentinel": 1000000000.0
+  },
+  "checkpoints": {
+    "cnn_path": "checkpoints\\clean_v2\\best_cnnp.pt",
+    "cnn_sha256": "3558eaf97ea50a9ef6cf499da2985424684c83181d059b4e9a95f8c28305dcff",
+    "cnn_epoch": 5,
+    "transformer_path": "checkpoints\\clean_v2\\best_tfp.pt",
+    "transformer_sha256": "978e2d1e1247f12157ad4c32665ceda861567fef35fbf918e1d3bfcc8949363b",
+    "transformer_epoch": 5
+  },
+  "payload_policy": "8-byte deterministic payload per source image: first 8 bytes of SHA256(UTF8('rdh-benchmark-v1|' + filename + '|' + source SHA256)); same payload per image across all configurations",
+  "image_domain": "8-bit grayscale cover returned by existing load_grayscale_image; RGB TIFF source is converted to grayscale before embedding. Exact recovery is asserted in this grayscale cover domain; original RGB channel recovery is not claimed.",
+  "rdh_protocol": {
+    "codec": "project checkerboard PEE implementation; not a verified reproduction of Zhao et al.",
+    "embed_order": [
+      "cross",
+      "dot"
+    ],
+    "extract_restore_order": [
+      "dot",
+      "cross"
+    ],
+    "infinite_T2_encoding": "1e9 dual-hybrid sentinel used by the existing router",
+    "excluded_border_pixels": 1,
+    "sidecar_required": true,
+    "predictor_mae_is_not_rdh_performance": true
+  },
+  "metric_definitions": {
+    "capacity_bits": "safe zero-error positions counted during this actual payload embedding, both passes",
+    "capacity_bpp": "capacity_bits / grayscale cover pixel count",
+    "embedding_rate_bpp": "payload_bits / grayscale cover pixel count",
+    "marked_psnr_db": "8-bit PSNR between grayscale cover and marked grayscale image",
+    "predictor_mae_gray": "mean absolute signed prediction error over both pre-expansion passes",
+    "sidecar_storage": "actual saved compressed NPZ bytes, separate from marked PNG",
+    "timings": "wall-clock encode/decode operation timing; disk writes/image decoding excluded"
+  },
+  "commands": [
+    ".\\.venv\\Scripts\\python.exe scripts\\check_leakage.py --versioned v2",
+    ".\\.venv\\Scripts\\python.exe scripts\\evaluate_rdh_benchmark_v1.py --dataset-version v2 --checkpoint-dir checkpoints\\clean_v2 --thresholds outputs\\clean_v2_experiment\\router_tuning\\router_thresholds.json --output-dir outputs\\clean_v2_experiment\\usc_sipi_rdh_v1",
+    ".\\.venv\\Scripts\\python.exe -m pytest -q"
+  ],
+  "source_images": [
+    {
+      "filename": "4.2.03.tiff",
+      "absolute_path": "C:\\Users\\mails\\Downloads\\misc\\misc\\4.2.03.tiff",
+      "source_sha256": "3f590b52279fb59b81906f1e928ae713a5357b1afc1a2017a103adb563fb4494",
+      "source_mode": "RGB",
+      "source_size": [
+        512,
+        512
+      ],
+      "cover_shape": [
+        512,
+        512
+      ],
+      "cover_sha256": "eea16b3cec8a2d7a3e7df16b67323b938687dda708a31c16e25c4845f791aa78"
+    },
+    {
+      "filename": "4.2.05.tiff",
+      "absolute_path": "C:\\Users\\mails\\Downloads\\misc\\misc\\4.2.05.tiff",
+      "source_sha256": "ae9eba12b80df955e47585bf4a16332ea0dadc753668d3457c509564934dbd40",
+      "source_mode": "RGB",
+      "source_size": [
+        512,
+        512
+      ],
+      "cover_shape": [
+        512,
+        512
+      ],
+      "cover_sha256": "d24d53acae72b4e0566183db23743c85dd34fc47ab2c8d6d477d83950da6109c"
+    },
+    {
+      "filename": "4.2.06.tiff",
+      "absolute_path": "C:\\Users\\mails\\Downloads\\misc\\misc\\4.2.06.tiff",
+      "source_sha256": "aa00ff3defadcd99e2e5fb5fbd06d12d6570284822a37186e3f8827f9bb4ca73",
+      "source_mode": "RGB",
+      "source_size": [
+        512,
+        512
+      ],
+      "cover_shape": [
+        512,
+        512
+      ],
+      "cover_sha256": "b6dd5dd7e835a59eac1add45b803a49c9da6227b6cf6c68ce2b21d27c352c22f"
+    },
+    {
+      "filename": "4.2.07.tiff",
+      "absolute_path": "C:\\Users\\mails\\Downloads\\misc\\misc\\4.2.07.tiff",
+      "source_sha256": "676c21edcc56b517ebd54764d6026d2befe7e15014ec3f0c9e6f2ce1d9ad74bf",
+      "source_mode": "RGB",
+      "source_size": [
+        512,
+        512
+      ],
+      "cover_shape": [
+        512,
+        512
+      ],
+      "cover_sha256": "a09849f1d7df7593adddb2ac954e4123572bdc980f306e13f5ede209d4215bd6"
+    },
+    {
+      "filename": "boat.512.tiff",
+      "absolute_path": "C:\\Users\\mails\\Downloads\\misc\\misc\\boat.512.tiff",
+      "source_sha256": "6bc7319b1e3b44ce0b2a571ac39a28bac94437d812057d1afb2cf78ea3a9a35f",
+      "source_mode": "L",
+      "source_size": [
+        512,
+        512
+      ],
+      "cover_shape": [
+        512,
+        512
+      ],
+      "cover_sha256": "b292548c463580074f3032fdecf2c1873114b797d0827a1e52e9ef37c99989f7"
+    },
+    {
+      "filename": "house.tiff",
+      "absolute_path": "C:\\Users\\mails\\Downloads\\misc\\misc\\house.tiff",
+      "source_sha256": "82717baf56d3f48bc4e2767afc9f233e7f595ad150ca91932a4a8daa46b3300f",
+      "source_mode": "RGB",
+      "source_size": [
+        512,
+        512
+      ],
+      "cover_shape": [
+        512,
+        512
+      ],
+      "cover_sha256": "c0b33703fafb83900f65619f872b3d105f4cfe7d0a6dc9d7837ee7a94ee8b12f"
+    },
+    {
+      "filename": "5.2.08.tiff",
+      "absolute_path": "C:\\Users\\mails\\Downloads\\misc\\misc\\5.2.08.tiff",
+      "source_sha256": "000a3e36a04b954cefd86d8ab2ac61676034e6cc9e3c0bbab8aaa95bcff03b93",
+      "source_mode": "L",
+      "source_size": [
+        512,
+        512
+      ],
+      "cover_shape": [
+        512,
+        512
+      ],
+      "cover_sha256": "c29f0eaee7218ed422ba88ef879f894a1e880853c6364f45c988ccb9373e5432"
+    },
+    {
+      "filename": "5.2.09.tiff",
+      "absolute_path": "C:\\Users\\mails\\Downloads\\misc\\misc\\5.2.09.tiff",
+      "source_sha256": "b12edcb11e8a816ce431b0bbbb02f91bc8614f5f67d3fa1ffd1067d8dd2ff5f8",
+      "source_mode": "L",
+      "source_size": [
+        512,
+        512
+      ],
+      "cover_shape": [
+        512,
+        512
+      ],
+      "cover_sha256": "ff939f4478237c646e94f58eea32e32fc0b4a42f43fa0d22af5ce831a74502c1"
+    },
+    {
+      "filename": "5.2.10.tiff",
+      "absolute_path": "C:\\Users\\mails\\Downloads\\misc\\misc\\5.2.10.tiff",
+      "source_sha256": "044ed17593bc94a5c0fff638f2c4d068f563d415980e1f61b423c778bb61c181",
+      "source_mode": "L",
+      "source_size": [
+        512,
+        512
+      ],
+      "cover_shape": [
+        512,
+        512
+      ],
+      "cover_sha256": "5dcb11614ab9734cbe24263b7abadf879df0c54a7b3b950de7f046d905fc4fa5"
+    },
+    {
+      "filename": "7.1.01.tiff",
+      "absolute_path": "C:\\Users\\mails\\Downloads\\misc\\misc\\7.1.01.tiff",
+      "source_sha256": "8ce9bb9ac39ffa0b630cd7245e90833867997631789c35c1625cbda4386a2305",
+      "source_mode": "L",
+      "source_size": [
+        512,
+        512
+      ],
+      "cover_shape": [
+        512,
+        512
+      ],
+      "cover_sha256": "4f2dace2f4135c693ec965b2dd551b691fe93178e404d7745da8a375e34cedb2"
+    },
+    {
+      "filename": "7.1.02.tiff",
+      "absolute_path": "C:\\Users\\mails\\Downloads\\misc\\misc\\7.1.02.tiff",
+      "source_sha256": "0cfb76e14c42fa22d5844b9f933376650a570f22725e3c040a6001c2e5db6a27",
+      "source_mode": "L",
+      "source_size": [
+        512,
+        512
+      ],
+      "cover_shape": [
+        512,
+        512
+      ],
+      "cover_sha256": "38d12cbc2493413c19879d92d1037e79b35483617b6aa0f1bd1362162950d214"
+    },
+    {
+      "filename": "7.1.03.tiff",
+      "absolute_path": "C:\\Users\\mails\\Downloads\\misc\\misc\\7.1.03.tiff",
+      "source_sha256": "77c09b46652b93d0ebe1ee4441ca0703848bd8af518dad12e1c137e402a61d25",
+      "source_mode": "L",
+      "source_size": [
+        512,
+        512
+      ],
+      "cover_shape": [
+        512,
+        512
+      ],
+      "cover_sha256": "8986d7b2adb6daec35d47ef79d5b4711230efccdf752b90891a00f195a9e96cf"
+    },
+    {
+      "filename": "7.1.04.tiff",
+      "absolute_path": "C:\\Users\\mails\\Downloads\\misc\\misc\\7.1.04.tiff",
+      "source_sha256": "a981e8f5c81180777e8cf316c825d0bc94488dd521f663b061f917ef55962149",
+      "source_mode": "L",
+      "source_size": [
+        512,
+        512
+      ],
+      "cover_shape": [
+        512,
+        512
+      ],
+      "cover_sha256": "a4f29b5a7c716642533c10ff2a031836fae9e53d6deddccab27766cab5c6ef7e"
+    },
+    {
+      "filename": "7.1.05.tiff",
+      "absolute_path": "C:\\Users\\mails\\Downloads\\misc\\misc\\7.1.05.tiff",
+      "source_sha256": "97a04394429439031aac9074e1c1e774676bfcf8961339f9fce6f0592f742344",
+      "source_mode": "L",
+      "source_size": [
+        512,
+        512
+      ],
+      "cover_shape": [
+        512,
+        512
+      ],
+      "cover_sha256": "99ece61c7540dc9435290f4aa2dd722fb6c7b24be0a738cdd3b4177e52e81833"
+    },
+    {
+      "filename": "7.1.06.tiff",
+      "absolute_path": "C:\\Users\\mails\\Downloads\\misc\\misc\\7.1.06.tiff",
+      "source_sha256": "c8be3c16cc94c713a86232522d557441d80b2c40f91381d9ed1651d41a9e9ca0",
+      "source_mode": "L",
+      "source_size": [
+        512,
+        512
+      ],
+      "cover_shape": [
+        512,
+        512
+      ],
+      "cover_sha256": "230619cf382c79d3c72cd8fe2ae34438a2d9605ca47fb65d6b63088c5016ea8b"
+    },
+    {
+      "filename": "7.1.07.tiff",
+      "absolute_path": "C:\\Users\\mails\\Downloads\\misc\\misc\\7.1.07.tiff",
+      "source_sha256": "501b4c95fda546a860c54c547a25f35bd84382171df7278bd7f7545316c57b70",
+      "source_mode": "L",
+      "source_size": [
+        512,
+        512
+      ],
+      "cover_shape": [
+        512,
+        512
+      ],
+      "cover_sha256": "ac24c797ced5cb19e676d46d438dbad10a3f3a3d3f8e0d9527606071bc1f36aa"
+    },
+    {
+      "filename": "7.1.08.tiff",
+      "absolute_path": "C:\\Users\\mails\\Downloads\\misc\\misc\\7.1.08.tiff",
+      "source_sha256": "8cf6aac78f3e501b0658238704c941fb0df2940de1a95bb889e47cf3ba511731",
+      "source_mode": "L",
+      "source_size": [
+        512,
+        512
+      ],
+      "cover_shape": [
+        512,
+        512
+      ],
+      "cover_sha256": "9a9d092aad1205500ffc73e6cde51cee669b8929c74b02aa01e11cbea4abfeba"
+    },
+    {
+      "filename": "7.1.09.tiff",
+      "absolute_path": "C:\\Users\\mails\\Downloads\\misc\\misc\\7.1.09.tiff",
+      "source_sha256": "92842996ce10ced24f387e08cde93059be8dde2c4e236848806ec6392d054ab3",
+      "source_mode": "L",
+      "source_size": [
+        512,
+        512
+      ],
+      "cover_shape": [
+        512,
+        512
+      ],
+      "cover_sha256": "e51e2d6757019973667133c9053609ef7c47fb1862f4afda154e6a74c4d22f2e"
+    },
+    {
+      "filename": "7.1.10.tiff",
+      "absolute_path": "C:\\Users\\mails\\Downloads\\misc\\misc\\7.1.10.tiff",
+      "source_sha256": "7ef3caa199fd4dbecd4521dea4ab2b079c054fbe6d1d449c98e86ffe41e49063",
+      "source_mode": "L",
+      "source_size": [
+        512,
+        512
+      ],
+      "cover_shape": [
+        512,
+        512
+      ],
+      "cover_sha256": "5bbafbe2a3e26678bc5cf4da0cd380fd564c72808bd38dbfebc9a8523174c532"
+    }
+  ]
+}

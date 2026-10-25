@@ -1,0 +1,5 @@
+Partition,Count,Format,Dimensions,Mode,Source
+Train (BOSSbase),3500,PGM (P5),512x512,8-bit Grayscale,BOSSbase 1.01
+Validation (BOSSbase),500,PGM (P5),512x512,8-bit Grayscale,BOSSbase 1.01
+Holdout (Locked),6000,PGM (P5),512x512,8-bit Grayscale,BOSSbase 1.01
+Benchmark Test (USC-SIPI),19,TIFF,512x512,Grayscale (BT.601 converted if RGB),USC-SIPI Misc

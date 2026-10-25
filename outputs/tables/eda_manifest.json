@@ -1,0 +1,41 @@
+{
+  "description": "Inventory of images and metrics used in Phase 3.1 EDA outputs",
+  "train_samples_figure1": [
+    "3772.pgm",
+    "6673.pgm",
+    "7262.pgm",
+    "761.pgm",
+    "3780.pgm",
+    "1773.pgm",
+    "7510.pgm",
+    "2680.pgm"
+  ],
+  "test_samples_figure1": [
+    "4.2.03.tiff",
+    "4.2.05.tiff",
+    "4.2.06.tiff",
+    "4.2.07.tiff",
+    "boat.512.tiff",
+    "house.tiff",
+    "5.2.08.tiff",
+    "7.1.01.tiff"
+  ],
+  "test_samples_figure3": [
+    "4.2.05.tiff",
+    "boat.512.tiff",
+    "4.2.07.tiff",
+    "4.2.03.tiff"
+  ],
+  "total_test_images_analyzed": 19,
+  "total_train_images_analyzed": 50,
+  "generated_figures": [
+    "eda_sample_grid.png",
+    "eda_histograms.png",
+    "eda_texture_complexity.png"
+  ],
+  "generated_tables": [
+    "eda_dataset_summary.csv",
+    "eda_image_statistics.csv",
+    "eda_benchmark_complexity_ranking.csv"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "dataset_version": "v2",
+  "evaluation_split": "holdout",
+  "holdout_count": 5997,
+  "holdout_filename_sha256": "106a746a7af4a08deec2db7d2685ee03fdc9f7f97f078e89cdb96015672e98c8",
+  "splits_path": "D:\\rdh-triple-hybrid\\data\\processed\\v2\\splits.json",
+  "splits_file_sha256": "e53d7db88917caf492698f91af8dd2d4761aa1fa2b279361d602ee58c7e2a6cd",
+  "manifest_path": "D:\\rdh-triple-hybrid\\data\\processed\\v2\\dataset_manifest.json",
+  "manifest_file_sha256": "4793f836ed67e5f05a07563079381b3d45a823435de309761d0911b507256630",
+  "thresholds_path": "outputs\\clean_v2_experiment\\router_tuning\\router_thresholds.json",
+  "thresholds_sha256": "566a8cd11a25b7de48b3da336c8ffb67d316399ae98e75a4be1c7de0adacb923",
+  "threshold_selection_split": "val",
+  "thresholds": {
+    "T1": 1.0,
+    "T2": "inf"
+  },
+  "checkpoints": {
+    "cnn_path": "checkpoints\\clean_v2\\best_cnnp.pt",
+    "cnn_sha256": "3558eaf97ea50a9ef6cf499da2985424684c83181d059b4e9a95f8c28305dcff",
+    "transformer_path": "checkpoints\\clean_v2\\best_tfp.pt",
+    "transformer_sha256": "978e2d1e1247f12157ad4c32665ceda861567fef35fbf918e1d3bfcc8949363b"
+  },
+  "device": "cuda",
+  "metric_note": "Predictor MAE/RMSE/zero-error rate are prediction metrics, not RDH distortion, payload capacity, or sidecar overhead.",
+  "holdout_usage": "Used only after model checkpoints and thresholds were frozen; not used for training, checkpoint selection, or threshold tuning."
+}

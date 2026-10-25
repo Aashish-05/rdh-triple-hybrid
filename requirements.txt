@@ -1,0 +1,19 @@
+# Reversible Data Hiding: Triple-Hybrid Predictor Framework
+# Dependencies for Python 3.12 (Windows x64)
+
+# CUDA 12.4 PyTorch wheels
+--extra-index-url https://download.pytorch.org/whl/cu124
+torch==2.6.0+cu124
+torchvision==0.21.0+cu124
+
+# Scientific & Image Processing Stack
+numpy>=2.0.0
+pillow>=10.0.0
+scipy>=1.13.0
+pandas>=2.2.0
+
+# Plotting & Reporting
+matplotlib>=3.9.0
+
+# Testing Framework
+pytest>=8.0.0

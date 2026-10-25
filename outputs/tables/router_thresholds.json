@@ -1,0 +1,25 @@
+{
+  "T1": 1.0,
+  "T2": 8.0,
+  "val_mae": 2.548769,
+  "objective": "minimize_mean_val_mae_over_500_bossbase_images",
+  "T1_candidates": [
+    1.0,
+    2.0,
+    3.0,
+    4.0,
+    5.0,
+    6.0,
+    8.0
+  ],
+  "T2_candidates": [
+    8.0,
+    10.0,
+    12.0,
+    15.0,
+    20.0,
+    25.0,
+    "inf"
+  ],
+  "tuning_note": "Thresholds selected on 500 BOSSbase validation images only. Test images (USC-SIPI) were NOT used during tuning."
+}
